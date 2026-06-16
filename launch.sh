@@ -3,3 +3,4 @@
 echo Quel challenge souhaitez-vous exécuter ?
 read nbChallenge
 c++ ch$nbChallenge/ch$nbChallenge.cpp socketConnector.cpp -o ch$nbChallenge/ch$nbChallenge.out
+./ch$nbChallenge/ch$nbChallenge.out
