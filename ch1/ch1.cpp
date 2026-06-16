@@ -17,6 +17,8 @@
 #include <netdb.h>
 #include <sys/socket.h>
 
+#include "../socketConnector.h"
+
 
 int searchNumberInMessage(std::string message, std::string toFind) {
     int position = message.find(toFind);
@@ -26,35 +28,7 @@ int searchNumberInMessage(std::string message, std::string toFind) {
 
 
 int main() {
-    int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (clientSocket == -1) {
-        perror("Erreur avec le socket");
-        return -1;
-    }
-
-    std::string adress = "challenge01.root-me.org";
-    int port = 52002;
-    struct sockaddr_in infoServer;
-    infoServer.sin_family = AF_INET;
-    infoServer.sin_port = htons(port);
-
-    struct hostent* host = gethostbyname(adress.c_str());
-    if (host == nullptr) {
-        std::cerr << "Erreur : Impossible de résoudre le nom de domaine." << std::endl;
-        close(clientSocket);
-        return -1;
-    }
-
-    std::memcpy(&infoServer.sin_addr, host->h_addr_list[0], host->h_length);
-
-    int connexionResult = connect(clientSocket, reinterpret_cast<struct sockaddr *>(&infoServer), sizeof(infoServer));
-    if (connexionResult == -1) {
-        perror("Erreur avec le connect");
-        close(clientSocket);
-        return -1;
-    }
-
-    std::cout << "Connexion au serveur réussie !" << std::endl;
+    int clientSocket = SocketConnector::customConnect("challenge01.root-me.org", 52002);
 
     char buffer[1024] = {};
     int byteRead = read(clientSocket, buffer, 1024);
